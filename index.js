@@ -5,10 +5,9 @@
 // Creating webserver
 const express = require("express");
 const Datastore = require('nedb');
-const atob = require("atob");
 const fs = require('fs');
 const fetch = require('node-fetch');
-const url = require('url'); 
+
 
 //Setting up enviornment variables 
 require('dotenv').config()
