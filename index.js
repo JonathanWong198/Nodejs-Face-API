@@ -33,6 +33,16 @@ const database = new Datastore("database.db");
 database.loadDatabase();
 
 
+function convertBase64toImage(dataString) {
+
+    var image = dataString;
+
+    var data = image.replace(/^data:image\/\w+;base64,/, '');
+
+    fs.writeFile("out.png", data, {encoding: 'base64'}, (err)=>{})
+
+}
+
 async function getFaceData(image) {
 
     const options = {
@@ -93,8 +103,9 @@ app.post("/api", async (request, response) => {
     data.timestamp = timestamp;
     database.insert(data);
 
+    await convertBase64toImage(data.image64);
 
-    const imageBuffer = fs.readFileSync('out.jpg');
+    const imageBuffer = fs.readFileSync('out.png');
 
     const facialData = await getFaceData(imageBuffer);
 
