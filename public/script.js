@@ -67,6 +67,7 @@ function setup() {
     const submit = document.getElementById("submit");
     submit.addEventListener("click", async event => {
 
+        // Captures image
         video.loadPixels();
         image64 = video.canvas.toDataURL();
         data.image64 = image64;

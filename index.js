@@ -39,7 +39,7 @@ function convertBase64toImage(dataString) {
 
     var data = image.replace(/^data:image\/\w+;base64,/, '');
 
-    fs.writeFile("out.png", data, {encoding: 'base64'}, (err)=>{})
+    fs.writeFileSync("out.png", data, {encoding: 'base64'}, (err)=>{})
 
 }
 
