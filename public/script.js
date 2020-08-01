@@ -70,6 +70,7 @@ function setup() {
         // Captures image
         video.loadPixels();
         image64 = video.canvas.toDataURL();
+
         data.image64 = image64;
 
         const options = {
