@@ -90,14 +90,10 @@ async function getFaceData(image) {
 
 }
 
+// Routes to Database
+
 // setting up the GET endpoint for /api 
 app.get("/api", async (request, response) => {
-
-    // database.find({}).sort({timestamp : -1}).exec((err, data) => {
-    //     if (err) {
-    //         response.end();
-    //         return
-    //     }
 
         try {
 
@@ -117,7 +113,6 @@ app.get("/api", async (request, response) => {
 
 });
 
-// Routes to Database 
 
 // Entering selfie information 
 app.post("/api", async (request, response) => {

@@ -1,15 +1,3 @@
-
-// function bytesBufferToBase64(buffer) {
-//     let binary = '';
-//     const bytes = new Uint8Array(buffer);
-//     const len = bytes.byteLength;
-//     for (let i = 0; i < len; i += 1) {
-//       binary += String.fromCharCode(bytes[i]);
-//     }
-
-//     return btoa(binary);
-//   }
-
 async function getData() {
     const response = await fetch('/api'); // Default method is GET
     const data = await response.json();
