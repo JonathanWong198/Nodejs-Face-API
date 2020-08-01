@@ -105,12 +105,6 @@ app.get("/api", async (request, response) => {
             console.log(err);
 
         }
-
-
-        
-
-    // });
-
 });
 
 
