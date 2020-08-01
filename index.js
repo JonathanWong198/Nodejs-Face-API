@@ -7,6 +7,8 @@ const express = require("express");
 const Datastore = require('nedb');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const pool = require("./database");
+
 
 
 //Setting up enviornment variables 
@@ -88,53 +90,57 @@ async function getFaceData(image) {
 
 }
 
-// Recieve information from the user by setting up an endpoint
-// setting up /api an an endpoint to recieve post requests
-app.post("/api", async (request, response) => {
-    
-    console.log("Request recieved")
- 
-    // console.log(request.body);
-
-    const data = request.body; 
-
-    //adding timestamp to the json request 
-    const timestamp = Date.now();
-    data.timestamp = timestamp;
-    database.insert(data);
-
-    await convertBase64toImage(data.image64);
-
-    const imageBuffer = fs.readFileSync('out.png');
-
-    const facialData = await getFaceData(imageBuffer);
-
-    // Sending back a response
-    response.json({
-        status : "Success",
-        latitude : data.lat,
-        longitude : data.long,
-        timestamp : data.timestamp,
-        image64: data.image64,
-        facialData : facialData
-
-
-
-    });
-
-});
+// Routes to Database
 
 // setting up the GET endpoint for /api 
-app.get("/api", (request, response) => {
+app.get("/api", async (request, response) => {
 
-    database.find({}).sort({timestamp : -1}).exec((err, data) => {
-        if (err) {
-            response.end();
-            return
+        try {
+
+            const data = await pool.query("SELECT id, ST_X(ST_AsText(coordinates)), ST_Y(ST_AsText(coordinates)) , image64, timestamp FROM selfieinfo");
+            response.json(data.rows);
+        } 
+
+        catch(err) {
+            console.log(err);
+
         }
-        response.json(data);
+});
 
-    });
 
+// Entering selfie information 
+app.post("/api", async (request, response) => {
+
+    try {
+        const latitude = request.body.lat;
+        const longitude = request.body.long;
+        const coordinates = `POINT(${longitude} ${latitude})`;
+
+        const timestamp = Date.now();
+        const image64 = request.body.image64;
+
+        const newData = await pool.query(   
+            "INSERT INTO selfieinfo(coordinates, image64, timestamp) VALUES($1,$2,$3) RETURNING id, ST_AsText(coordinates), image64, timestamp", 
+            [coordinates, image64, timestamp]
+        );
+
+
+        await convertBase64toImage(request.body.image64);
+
+        const imageBuffer = fs.readFileSync('out.png');
+
+        const facialData = await getFaceData(imageBuffer);
+
+        newData.rows[0].facialData = facialData;
+        
+        response.json(newData.rows[0]);
+    }
+
+    catch(err) {
+        console.error(err);
+
+    }
+
+     
 });
 

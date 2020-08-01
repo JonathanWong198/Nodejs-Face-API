@@ -4,7 +4,7 @@
   "description": "Introduction to Data and APIs in Javascript",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js"
+    "start": "node index.js"
   },
   "keywords": [
     "Example",
@@ -23,6 +23,7 @@
     "form-data": "^3.0.0",
     "nedb": "^1.8.0",
     "node-fetch": "^2.6.0",
+    "pg": "^8.3.0",
     "xmlhttprequest": "^1.8.0"
   }
 }
