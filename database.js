@@ -4,12 +4,7 @@ const pg = require('pg');
 
 // Configuration 
 const pool = new Pool({
-    // user : "postgres", 
-    // password : "LetMeIn",
-    // host : "localhost",
-    // port : 5432, 
-    // database : "selfiedata"
-    connectionString : process.env.DATABASE_URL,
+    connectionString : process.env.DATABASE_URL || "postgresql://postgres:LetMeIn@localhost:5432/selfiedata",
     ssl: process.env.DATABASE_URL ? true : false
 });
 
