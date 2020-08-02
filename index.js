@@ -142,5 +142,3 @@ async function callFaceAPI(request, response) {
     response.json(facialData);
 }
 
-     
-
