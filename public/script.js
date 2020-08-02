@@ -18,7 +18,6 @@ function maxConfidenceEmotion(emotionList) {
             if(current < value) {
                 current = value;
                 highestEmotions.push(entry);
-                console.log(current);
             }
         }
 
@@ -83,14 +82,12 @@ function setup() {
 
         
         const response = await fetch('/api', options);
-        console.log("Successfully sent data");
-        console.log("Recieved Response");
         const responseData = await response.json();
         console.log(responseData);
-
+        
         // Parse the response data and present the data onto the HTML
-        document.getElementById("age").textContent = responseData.facialData[0].faceAttributes.age;
-        const emotions = responseData.facialData[0].faceAttributes.emotion;
+        document.getElementById("age").textContent = responseData[0].faceAttributes.age;
+        const emotions = responseData[0].faceAttributes.emotion;
         document.getElementById("mood").textContent = maxConfidenceEmotion(emotions);
     });
                 
