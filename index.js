@@ -8,6 +8,7 @@ const Datastore = require('nedb');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const pool = require("./database");
+const { nextTick } = require("process");
 
 
 
@@ -109,38 +110,37 @@ app.get("/api", async (request, response) => {
 
 
 // Entering selfie information 
-app.post("/api", async (request, response) => {
-
-    try {
-        const latitude = request.body.lat;
-        const longitude = request.body.long;
-        const coordinates = `POINT(${longitude} ${latitude})`;
-
-        const timestamp = Date.now();
-        const image64 = request.body.image64;
-
-        const newData = await pool.query(   
-            "INSERT INTO selfieinfo(coordinates, image64, timestamp) VALUES($1,$2,$3) RETURNING id, ST_AsText(coordinates), image64, timestamp", 
-            [coordinates, image64, timestamp]
-        );
+app.post("/api", insertRequest, callFaceAPI);
 
 
-        await convertBase64toImage(request.body.image64);
+async function insertRequest(request, response, next) {
 
-        const imageBuffer = fs.readFileSync('out.png');
+    const latitude = request.body.lat;
+    const longitude = request.body.long;
+    const coordinates = `POINT(${longitude} ${latitude})`;
 
-        const facialData = await getFaceData(imageBuffer);
+    const timestamp = Date.now();
+    const image64 = request.body.image64;
 
-        newData.rows[0].facialData = facialData;
-        
-        response.json(newData.rows[0]);
-    }
+    const newData = await pool.query(   
+        "INSERT INTO selfieinfo(coordinates, image64, timestamp) VALUES($1,$2,$3) RETURNING id, ST_AsText(coordinates), image64, timestamp", 
+        [coordinates, image64, timestamp]
+    );
 
-    catch(err) {
-        console.error(err);
+    next();
+}
 
-    }
+async function callFaceAPI(request, response) {
+
+
+    await convertBase64toImage(request.body.image64);
+
+    const imageBuffer = fs.readFileSync('out.png');
+
+    const facialData = await getFaceData(imageBuffer);
+
+    response.json(facialData);
+}
 
      
-});
 
