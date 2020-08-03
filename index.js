@@ -8,7 +8,6 @@ const Datastore = require('nedb');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const pool = require("./database");
-const { nextTick } = require("process");
 
 
 
@@ -106,6 +105,8 @@ app.get("/api", async (request, response) => {
             console.log(err);
 
         }
+
+        pool.end();
 });
 
 
@@ -140,5 +141,7 @@ async function callFaceAPI(request, response) {
     const facialData = await getFaceData(imageBuffer);
 
     response.json(facialData);
+
+    pool.end();
 }
 
