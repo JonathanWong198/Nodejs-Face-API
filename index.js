@@ -7,12 +7,25 @@ const express = require("express");
 const Datastore = require('nedb');
 const fs = require('fs');
 const fetch = require('node-fetch');
-const pool = require("./database");
-
-
+// const pool = require("./database");
 
 //Setting up enviornment variables 
 require('dotenv').config()
+
+
+const Pool = require("pg").Pool;
+const pg = require('pg');
+
+
+// Configuration 
+const pool = new Pool({
+    connectionString : process.env.DATABASE_URL || "postgresql://postgres:LetMeIn@localhost:5432/selfiedata",
+    ssl: process.env.DATABASE_URL ? true : false
+});
+
+console.log(process.env.DATABASE_URL);
+
+// module.exports = pool; 
 
 
 const subscriptionKey = process.env.API_KEY;
