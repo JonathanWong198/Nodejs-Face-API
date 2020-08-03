@@ -8,4 +8,6 @@ const pool = new Pool({
     ssl: process.env.DATABASE_URL ? true : false
 });
 
+console.log(process.env.DATABASE_URL);
+
 module.exports = pool; 
