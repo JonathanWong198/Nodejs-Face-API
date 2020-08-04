@@ -125,6 +125,8 @@ async function insertRequest(request, response, next) {
         [coordinates, image64, timestamp]
     );
 
+    pool.end();
+
     next();
 }
 
