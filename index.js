@@ -8,6 +8,8 @@ const Datastore = require('nedb');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const pool = require("./database");
+const client = require("./database");
+
 
 
 //Setting up enviornment variables 
@@ -30,8 +32,10 @@ app.use(express.static('public'));
 // Parse Json data
 app.use(express.json({limit: '50mb'}));
 
-const database = new Datastore("database.db");
-database.loadDatabase();
+// const database = new Datastore("database.db");
+// database.loadDatabase();
+
+client.connect();
 
 
 function convertBase64toImage(dataString) {
